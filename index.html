@@ -1,0 +1,894 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Inscripción de servidores · Campamento Shalom</title>
+  <meta name="description" content="Confirma tu participación como servidor(a) en el Campamento de jóvenes Shalom.">
+  <meta name="theme-color" content="#1F6B4A">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #F4F7F2;
+      --card: #FFFFFF;
+      --ink: #1C2B24;
+      --muted: #4E6158;
+      --line: #C9D6CD;
+      --finca: #1F6B4A;
+      --finca-deep: #154D35;
+      --sol: #F2C230;
+      --cielo: #DCEBF3;
+      --error: #B3261E;
+      --error-bg: #FBEAE8;
+      --radius-s: 10px;
+      --radius-m: 16px;
+      --display: "Bricolage Grotesque", "Trebuchet MS", sans-serif;
+      --body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--body);
+      font-size: 1.0625rem;
+      line-height: 1.55;
+    }
+    img, svg { display: block; max-width: 100%; }
+    a { color: var(--finca-deep); }
+    :focus-visible { outline: 3px solid var(--sol); outline-offset: 2px; border-radius: 6px; }
+
+    .page {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 16px 64px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas: "intro" "badge" "main";
+      gap: 8px;
+    }
+    @media (min-width: 900px) {
+      .page {
+        grid-template-columns: minmax(0, 1fr) 340px;
+        grid-template-areas: "intro badge" "main badge";
+        column-gap: 64px;
+        padding: 0 32px 96px;
+      }
+    }
+
+    /* Intro */
+    .intro { grid-area: intro; padding-top: 40px; }
+    .camp-name {
+      margin: 0 0 12px;
+      font-weight: 700;
+      color: var(--finca);
+      font-size: 1rem;
+    }
+    h1 {
+      margin: 0;
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: clamp(2.5rem, 9vw, 4.25rem);
+      line-height: 0.98;
+      letter-spacing: -0.025em;
+      max-width: 12ch;
+    }
+    .welcome {
+      margin: 20px 0 0;
+      max-width: 34em;
+      font-size: 1.125rem;
+    }
+
+    /* Badge */
+    .badge-area {
+      grid-area: badge;
+      display: flex;
+      justify-content: center;
+      padding: 8px 0 24px;
+    }
+    @media (min-width: 900px) {
+      .badge-area { padding-top: 0; align-self: start; position: sticky; top: 0; }
+    }
+    .lanyard {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .lanyard-strap {
+      width: 120px;
+      height: 56px;
+      background:
+        linear-gradient(to bottom left, transparent calc(50% - 7px), var(--sol) calc(50% - 7px), var(--sol) calc(50% + 7px), transparent calc(50% + 7px)) left / 50% 100% no-repeat,
+        linear-gradient(to bottom right, transparent calc(50% - 7px), var(--sol) calc(50% - 7px), var(--sol) calc(50% + 7px), transparent calc(50% + 7px)) right / 50% 100% no-repeat;
+    }
+    @media (min-width: 900px) { .lanyard-strap { height: 120px; } }
+    .clip {
+      width: 34px; height: 22px;
+      margin-top: -6px;
+      border-radius: 6px 6px 4px 4px;
+      background: #8B9A92;
+      box-shadow: inset 0 -3px 0 rgba(0,0,0,.18);
+    }
+    .badge {
+      position: relative;
+      width: 268px;
+      margin-top: -4px;
+      background: var(--card);
+      border-radius: var(--radius-m);
+      border: 1px solid var(--line);
+      box-shadow: 0 18px 40px -18px rgba(21, 77, 53, .45);
+      transform: rotate(-2.5deg);
+      transform-origin: top center;
+      overflow: hidden;
+    }
+    .badge-top {
+      background: var(--finca);
+      color: #fff;
+      padding: 26px 20px 16px;
+      position: relative;
+    }
+    .badge-top::before {
+      content: "";
+      position: absolute;
+      top: 10px; left: 50%;
+      width: 40px; height: 8px;
+      margin-left: -20px;
+      border-radius: 99px;
+      background: var(--paper);
+    }
+    .badge-camp {
+      margin: 0;
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 1.375rem;
+      line-height: 1.1;
+    }
+    .badge-year { margin: 2px 0 0; opacity: .85; font-size: .9375rem; }
+    .badge-body { padding: 20px 20px 22px; }
+    .badge-name {
+      margin: 0;
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: 1.75rem;
+      line-height: 1.05;
+      letter-spacing: -0.015em;
+      min-height: 2.1em;
+      overflow-wrap: anywhere;
+    }
+    .badge-name.is-empty { color: #A3B2AA; }
+    .badge-role {
+      display: inline-block;
+      margin-top: 14px;
+      padding: 4px 12px;
+      border-radius: 99px;
+      background: var(--sol);
+      color: var(--ink);
+      font-weight: 700;
+      font-size: .9375rem;
+    }
+    .badge-team { margin: 10px 0 0; color: var(--muted); font-size: .9375rem; min-height: 1.5em; }
+    .stamp {
+      position: absolute;
+      right: 14px; bottom: 18px;
+      padding: 6px 10px;
+      border: 3px solid var(--finca);
+      border-radius: 8px;
+      color: var(--finca);
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: 1.125rem;
+      transform: rotate(-12deg) scale(1);
+      opacity: 0;
+      visibility: hidden;
+    }
+    .badge.is-confirmed .stamp { opacity: 1; visibility: visible; animation: stamp .5s cubic-bezier(.2,1.6,.4,1) both; }
+    @keyframes stamp {
+      from { opacity: 0; transform: rotate(-12deg) scale(2.2); }
+      to   { opacity: 1; transform: rotate(-12deg) scale(1); }
+    }
+
+    /* Main */
+    main { grid-area: main; min-width: 0; }
+    section { margin-top: 40px; }
+    h2 {
+      margin: 0 0 12px;
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 1.625rem;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+    }
+
+    /* Payment */
+    .price-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 4px 16px;
+      margin: 0 0 4px;
+    }
+    .price {
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: 2.75rem;
+      line-height: 1;
+      letter-spacing: -0.02em;
+      color: var(--finca-deep);
+    }
+    .price-note { margin: 8px 0 20px; max-width: 34em; }
+    .pay-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+    .pay-list li {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px 16px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .pay-method { font-weight: 700; }
+    .pay-detail { display: block; font-weight: 400; color: var(--muted); }
+    .pay-value { font-variant-numeric: tabular-nums; font-weight: 700; }
+    .pay-action { display: flex; align-items: center; gap: 12px; margin-left: auto; }
+    .copy-btn {
+      appearance: none;
+      border: 1px solid var(--finca);
+      background: transparent;
+      color: var(--finca-deep);
+      border-radius: 99px;
+      padding: 6px 14px;
+      font: inherit;
+      font-size: .9375rem;
+      font-weight: 700;
+      cursor: pointer;
+      min-height: 36px;
+    }
+    .copy-btn:hover { background: #E7F0EA; }
+    .copy-btn.is-done { background: var(--finca); color: #fff; }
+
+    /* Form */
+    form { margin: 0; }
+    fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+    .group { margin-top: 40px; }
+    .group > legend {
+      padding: 0;
+      margin-bottom: 4px;
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 1.625rem;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+    }
+    .group-hint { margin: 0 0 8px; color: var(--muted); }
+    .field { margin-top: 22px; }
+    .field > label, .field > .q {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .opt { font-weight: 400; color: var(--muted); }
+    .hint { display: block; margin: -2px 0 8px; color: var(--muted); font-size: .9375rem; }
+    input[type="text"], input[type="tel"], textarea {
+      width: 100%;
+      font: inherit;
+      color: var(--ink);
+      background: var(--card);
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius-s);
+      padding: 12px 14px;
+      min-height: 50px;
+      transition: border-color .15s;
+    }
+    textarea { min-height: 96px; resize: vertical; }
+    input:hover, textarea:hover { border-color: #9FB3A7; }
+    input:focus, textarea:focus { outline: none; border-color: var(--finca); box-shadow: 0 0 0 3px rgba(31, 107, 74, .18); }
+    .field.has-error input, .field.has-error textarea { border-color: var(--error); }
+    .error-msg {
+      margin: 6px 0 0;
+      color: var(--error);
+      font-size: .9375rem;
+      font-weight: 700;
+    }
+    .error-msg:empty { display: none; }
+
+    .choices { display: flex; flex-wrap: wrap; gap: 10px; }
+    .choice { position: relative; }
+    .choice input {
+      position: absolute;
+      opacity: 0;
+      width: 1px; height: 1px;
+    }
+    .choice span {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 48px;
+      padding: 10px 18px 10px 14px;
+      border: 1.5px solid var(--line);
+      border-radius: 99px;
+      background: var(--card);
+      cursor: pointer;
+      user-select: none;
+    }
+    .choice span::before {
+      content: "";
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      border: 2px solid #8FA49A;
+      flex: none;
+      transition: border-width .12s, border-color .12s;
+    }
+    .choice input:checked + span { border-color: var(--finca); background: #E7F0EA; font-weight: 700; }
+    .choice input:checked + span::before { border: 6px solid var(--finca); }
+    .choice input:focus-visible + span { outline: 3px solid var(--sol); outline-offset: 2px; }
+    .field.has-error .choice span { border-color: var(--error); }
+
+    .reveal[hidden] { display: none; }
+
+    .file-drop {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px;
+      border: 1.5px dashed #9FB3A7;
+      border-radius: var(--radius-s);
+      background: var(--card);
+      cursor: pointer;
+    }
+    .file-drop:hover { border-color: var(--finca); }
+    .file-drop input {
+      position: absolute; inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+    }
+    .file-drop:focus-within { outline: 3px solid var(--sol); outline-offset: 2px; }
+    .file-icon {
+      flex: none;
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      background: var(--cielo);
+      display: grid; place-items: center;
+      color: var(--finca-deep);
+    }
+    .file-text { min-width: 0; }
+    .file-text strong { display: block; }
+    .file-name { color: var(--muted); font-size: .9375rem; overflow-wrap: anywhere; }
+    .file-clear {
+      margin-top: 8px;
+      appearance: none;
+      background: none;
+      border: 0;
+      padding: 4px 0;
+      color: var(--finca-deep);
+      font: inherit;
+      font-size: .9375rem;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+    .submit-area { margin-top: 40px; }
+    .submit-btn {
+      appearance: none;
+      width: 100%;
+      min-height: 58px;
+      border: 0;
+      border-radius: 99px;
+      background: var(--finca);
+      color: #fff;
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 1.25rem;
+      cursor: pointer;
+      box-shadow: 0 4px 0 var(--finca-deep);
+      transition: transform .08s, box-shadow .08s, background .15s;
+    }
+    .submit-btn:hover { background: #237A55; }
+    .submit-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--finca-deep); }
+    .submit-btn[disabled] { background: #6F8F80; box-shadow: none; cursor: progress; transform: none; }
+    @media (min-width: 600px) { .submit-btn { width: auto; padding: 0 40px; } }
+    .form-status {
+      margin: 16px 0 0;
+      padding: 12px 14px;
+      border-radius: var(--radius-s);
+      background: var(--error-bg);
+      color: var(--error);
+      font-weight: 700;
+    }
+    .form-status:empty { display: none; }
+    .privacy { margin: 16px 0 0; color: var(--muted); font-size: .9375rem; max-width: 34em; }
+
+    .demo-banner {
+      margin: 24px 0 0;
+      padding: 12px 14px;
+      border-radius: var(--radius-s);
+      background: var(--cielo);
+      font-size: .9375rem;
+    }
+
+    /* Success */
+    .success { margin-top: 40px; }
+    .success[hidden] { display: none; }
+    .success p { max-width: 34em; }
+    .success-actions { margin-top: 20px; }
+    .link-btn {
+      appearance: none;
+      background: none;
+      border: 1.5px solid var(--finca);
+      color: var(--finca-deep);
+      border-radius: 99px;
+      padding: 10px 20px;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    footer {
+      grid-column: 1 / -1;
+      margin-top: 56px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: .9375rem;
+    }
+    footer p { margin: 0; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+      .badge { transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="intro">
+      <p class="camp-name" data-camp-name>Campamento de jóvenes Shalom 2025</p>
+      <h1>Inscripción de servidores</h1>
+      <p class="welcome">¡Bienvenido(a), querido(a) servidor(a)! Gracias por tu sí agradable a Dios. Con este formulario confirmamos tu participación y reunimos la información que vamos a necesitar durante el campamento.</p>
+    </header>
+
+    <aside class="badge-area" aria-label="Vista previa de tu gafete">
+      <div class="lanyard" aria-hidden="true">
+        <div class="lanyard-strap"></div>
+        <div class="clip"></div>
+        <div class="badge" id="badge">
+          <div class="badge-top">
+            <p class="badge-camp">Shalom</p>
+            <p class="badge-year" data-camp-short>Campamento de jóvenes 2025</p>
+          </div>
+          <div class="badge-body">
+            <p class="badge-name is-empty" id="badgeName">Tu nombre aquí</p>
+            <span class="badge-role">Servidor(a)</span>
+            <p class="badge-team" id="badgeTeam"></p>
+          </div>
+          <div class="stamp">¡Listo!</div>
+        </div>
+      </div>
+    </aside>
+
+    <main>
+      <section id="pago" aria-labelledby="pago-titulo">
+        <h2 id="pago-titulo">Paquete para servidores</h2>
+        <div class="price-row">
+          <span class="price">B/. 56.00</span>
+        </div>
+        <p class="price-note">Separa tu cupo con el 50% (B/. 28.00) y paga el resto en cuotas hasta la última semana de febrero.</p>
+        <ul class="pay-list">
+          <li>
+            <span class="pay-method">Efectivo<span class="pay-detail">Parroquia San Mateo, en el Economato</span></span>
+          </li>
+          <li>
+            <span class="pay-method">Yappy<span class="pay-detail">En la descripción escribe “camps” y tu nombre</span></span>
+            <span class="pay-action">
+              <span class="pay-value">@shalompanama</span>
+              <button type="button" class="copy-btn" data-copy="@shalompanama" aria-label="Copiar usuario de Yappy">Copiar</button>
+            </span>
+          </li>
+          <li>
+            <span class="pay-method">Transferencia a Banco General<span class="pay-detail">Comunidad Católica Shalom</span></span>
+            <span class="pay-action">
+              <span class="pay-value">04-54-96-053309-8</span>
+              <button type="button" class="copy-btn" data-copy="04-54-96-053309-8" aria-label="Copiar número de cuenta">Copiar</button>
+            </span>
+          </li>
+        </ul>
+      </section>
+
+      <form id="form" novalidate>
+        <fieldset class="group">
+          <legend>Tus datos</legend>
+
+          <div class="field" data-field="nombre">
+            <label for="nombre">Nombre completo</label>
+            <input type="text" id="nombre" name="nombre" autocomplete="name" required maxlength="120" aria-describedby="nombre-err">
+            <p class="error-msg" id="nombre-err" aria-live="polite"></p>
+          </div>
+
+          <div class="field" data-field="cedula">
+            <label for="cedula">Cédula</label>
+            <span class="hint" id="cedula-hint">Con guiones, por ejemplo 8-123-4567</span>
+            <input type="text" id="cedula" name="cedula" required maxlength="20" autocapitalize="characters" aria-describedby="cedula-hint cedula-err">
+            <p class="error-msg" id="cedula-err" aria-live="polite"></p>
+          </div>
+
+          <div class="field" data-field="whatsapp">
+            <label for="whatsapp">WhatsApp <span class="opt">(opcional)</span></label>
+            <input type="tel" id="whatsapp" name="whatsapp" autocomplete="tel" inputmode="tel" maxlength="20" placeholder="6123-4567" aria-describedby="whatsapp-err">
+            <p class="error-msg" id="whatsapp-err" aria-live="polite"></p>
+          </div>
+        </fieldset>
+
+        <fieldset class="group">
+          <legend>Llegada y servicio</legend>
+
+          <fieldset class="field" data-field="transporte">
+            <legend class="q">¿Cómo vas a llegar a la finca? <span class="opt">(opcional)</span></legend>
+            <div class="choices">
+              <label class="choice"><input type="radio" name="transporte" value="En mi auto"><span>En mi auto</span></label>
+              <label class="choice"><input type="radio" name="transporte" value="Requiero de bus"><span>Requiero de bus</span></label>
+            </div>
+          </fieldset>
+
+          <div class="field" data-field="grupo">
+            <label for="grupo">¿Perteneces a algún grupo de oración, pastoral, movimiento parroquial u otro? <span class="opt">(opcional)</span></label>
+            <span class="hint" id="grupo-hint">Escribe cuál</span>
+            <input type="text" id="grupo" name="grupo" maxlength="200" aria-describedby="grupo-hint">
+          </div>
+
+          <fieldset class="field" data-field="sirviendo">
+            <legend class="q">¿Estás sirviendo? <span class="opt">(opcional)</span></legend>
+            <div class="choices">
+              <label class="choice"><input type="radio" name="sirviendo" value="Ya tengo un equipo"><span>Ya tengo un equipo</span></label>
+              <label class="choice"><input type="radio" name="sirviendo" value="Aún no tengo equipo"><span>Aún no tengo equipo</span></label>
+            </div>
+          </fieldset>
+
+          <div class="field reveal" data-field="equipo" id="equipoField" hidden>
+            <label for="equipo">¿En qué equipo o servicio estás?</label>
+            <input type="text" id="equipo" name="equipo" maxlength="200">
+          </div>
+        </fieldset>
+
+        <fieldset class="group">
+          <legend>Salud</legend>
+          <p class="group-hint">Esta información solo la verá el equipo organizador para cuidarte durante el campamento.</p>
+
+          <div class="field" data-field="salud">
+            <label for="salud">¿Sufres alguna enfermedad o tomas algún medicamento? <span class="opt">(opcional)</span></label>
+            <span class="hint" id="salud-hint">Indica cuál y la dosis, si aplica</span>
+            <textarea id="salud" name="salud" maxlength="1000" aria-describedby="salud-hint"></textarea>
+          </div>
+
+          <div class="field" data-field="alergias">
+            <label for="alergias">¿Tienes alguna alergia o intolerancia alimenticia diagnosticada? <span class="opt">(opcional)</span></label>
+            <span class="hint" id="alergias-hint">Indica cuál</span>
+            <textarea id="alergias" name="alergias" maxlength="1000" aria-describedby="alergias-hint"></textarea>
+          </div>
+        </fieldset>
+
+        <fieldset class="group">
+          <legend>Pago</legend>
+
+          <fieldset class="field" data-field="pago" aria-describedby="pago-err">
+            <legend class="q">¿Cómo realizarás el pago de tu inscripción?</legend>
+            <span class="hint">Los datos de pago están <a href="#pago">al inicio de la página</a></span>
+            <div class="choices">
+              <label class="choice"><input type="radio" name="pago" value="Efectivo" required><span>Efectivo</span></label>
+              <label class="choice"><input type="radio" name="pago" value="Transferencia"><span>Transferencia</span></label>
+              <label class="choice"><input type="radio" name="pago" value="Yappy"><span>Yappy</span></label>
+            </div>
+            <p class="error-msg" id="pago-err" aria-live="polite"></p>
+          </fieldset>
+
+          <div class="field" data-field="comprobante">
+            <span class="q" id="comprobante-label">Comprobante de pago <span class="opt">(opcional)</span></span>
+            <span class="hint" id="comprobante-hint">Si ya pagaste, sube una foto o PDF. Máximo 10 MB.</span>
+            <label class="file-drop">
+              <span class="file-icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4"/><path d="m6 10 6-6 6 6"/><path d="M4 20h16"/></svg>
+              </span>
+              <span class="file-text">
+                <strong id="fileTitle">Elegir archivo</strong>
+                <span class="file-name" id="fileName">Imagen, PDF o documento</span>
+              </span>
+              <input type="file" id="comprobante" name="comprobante" accept="image/*,application/pdf,.doc,.docx" aria-labelledby="comprobante-label" aria-describedby="comprobante-hint comprobante-err">
+            </label>
+            <button type="button" class="file-clear" id="fileClear" hidden>Quitar archivo</button>
+            <p class="error-msg" id="comprobante-err" aria-live="polite"></p>
+          </div>
+        </fieldset>
+
+        <div class="hp" aria-hidden="true">
+          <label for="website">No llenar este campo</label>
+          <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+        </div>
+
+        <div class="submit-area">
+          <button type="submit" class="submit-btn" id="submitBtn">Enviar inscripción</button>
+          <p class="form-status" id="formStatus" role="alert"></p>
+          <p class="privacy">Tus datos se guardan de forma privada en el Google Drive de la organización del campamento y solo se usan para el campamento.</p>
+          <p class="demo-banner" id="demoBanner" hidden>Modo de prueba: el formulario aún no está conectado a Google Drive, así que los envíos no se guardan.</p>
+        </div>
+      </form>
+
+      <section class="success" id="success" hidden tabindex="-1" aria-labelledby="success-title">
+        <h2 id="success-title">¡Inscripción enviada!</h2>
+        <p>Gracias, <strong id="successName"></strong>. Recibimos tus datos. Recuerda completar tu pago hasta la última semana de febrero.</p>
+        <p>Nos vemos, ¡Shalom!</p>
+        <div class="success-actions">
+          <button type="button" class="link-btn" id="againBtn">Inscribir a otra persona</button>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>Comunidad Católica Shalom · Panamá</p>
+    </footer>
+  </div>
+
+  <script>
+    /* =========================================================
+       CONFIGURACIÓN
+       Pega aquí la URL de tu Apps Script (termina en /exec).
+       Mientras esté vacía, la página funciona en modo de prueba.
+       ========================================================= */
+    const CONFIG = {
+      scriptUrl: '',
+      maxFileMB: 10
+    };
+
+    (function () {
+      const form = document.getElementById('form');
+      const submitBtn = document.getElementById('submitBtn');
+      const formStatus = document.getElementById('formStatus');
+      const badge = document.getElementById('badge');
+      const badgeName = document.getElementById('badgeName');
+      const badgeTeam = document.getElementById('badgeTeam');
+      const equipoField = document.getElementById('equipoField');
+      const fileInput = document.getElementById('comprobante');
+      const fileTitle = document.getElementById('fileTitle');
+      const fileName = document.getElementById('fileName');
+      const fileClear = document.getElementById('fileClear');
+      const success = document.getElementById('success');
+      const demoMode = !CONFIG.scriptUrl;
+
+      if (demoMode) document.getElementById('demoBanner').hidden = false;
+
+      const ALLOWED_TYPES = [
+        'image/jpeg', 'image/png', 'image/heic', 'image/heif', 'image/webp', 'image/gif',
+        'application/pdf', 'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+      ];
+
+      /* ---------- Copiar datos de pago ---------- */
+      document.querySelectorAll('[data-copy]').forEach(function (btn) {
+        btn.addEventListener('click', async function () {
+          const text = btn.getAttribute('data-copy');
+          try {
+            await navigator.clipboard.writeText(text);
+          } catch (e) {
+            const tmp = document.createElement('textarea');
+            tmp.value = text; document.body.appendChild(tmp); tmp.select();
+            try { document.execCommand('copy'); } catch (_) {}
+            tmp.remove();
+          }
+          btn.textContent = 'Copiado';
+          btn.classList.add('is-done');
+          setTimeout(function () { btn.textContent = 'Copiar'; btn.classList.remove('is-done'); }, 1800);
+        });
+      });
+
+      /* ---------- Gafete en vivo ---------- */
+      function updateBadge() {
+        const name = form.nombre.value.trim();
+        badgeName.textContent = name || 'Tu nombre aquí';
+        badgeName.classList.toggle('is-empty', !name);
+        const team = form.sirviendo.value === 'Ya tengo un equipo' ? form.equipo.value.trim() : '';
+        badgeTeam.textContent = team ? 'Equipo: ' + team : '';
+      }
+      form.nombre.addEventListener('input', updateBadge);
+      form.equipo.addEventListener('input', updateBadge);
+
+      /* ---------- Pregunta condicional ---------- */
+      form.querySelectorAll('input[name="sirviendo"]').forEach(function (r) {
+        r.addEventListener('change', function () {
+          equipoField.hidden = form.sirviendo.value !== 'Ya tengo un equipo';
+          updateBadge();
+        });
+      });
+
+      /* ---------- Archivo ---------- */
+      function resetFile() {
+        fileInput.value = '';
+        fileTitle.textContent = 'Elegir archivo';
+        fileName.textContent = 'Imagen, PDF o documento';
+        fileClear.hidden = true;
+      }
+      fileInput.addEventListener('change', function () {
+        setError('comprobante', '');
+        const f = fileInput.files[0];
+        if (!f) { resetFile(); return; }
+        const err = fileError(f);
+        if (err) { setError('comprobante', err); resetFile(); return; }
+        fileTitle.textContent = 'Archivo listo';
+        fileName.textContent = f.name + ' (' + formatSize(f.size) + ')';
+        fileClear.hidden = false;
+      });
+      fileClear.addEventListener('click', function () { resetFile(); setError('comprobante', ''); });
+
+      function fileError(f) {
+        if (f.size > CONFIG.maxFileMB * 1024 * 1024) {
+          return 'El archivo pesa ' + formatSize(f.size) + '. El máximo es ' + CONFIG.maxFileMB + ' MB; prueba con una captura de pantalla.';
+        }
+        const okExt = /\.(jpe?g|png|heic|heif|webp|gif|pdf|docx?)$/i.test(f.name);
+        if (!ALLOWED_TYPES.includes(f.type) && !okExt) {
+          return 'Ese tipo de archivo no se acepta. Sube una imagen, un PDF o un documento de Word.';
+        }
+        return '';
+      }
+      function formatSize(bytes) {
+        return bytes < 1024 * 1024 ? Math.max(1, Math.round(bytes / 1024)) + ' KB' : (bytes / 1024 / 1024).toFixed(1) + ' MB';
+      }
+
+      /* ---------- Validación ---------- */
+      function setError(name, msg) {
+        const field = form.querySelector('[data-field="' + name + '"]');
+        const out = document.getElementById(name + '-err');
+        if (field) field.classList.toggle('has-error', !!msg);
+        if (out) out.textContent = msg;
+        const input = form.elements[name];
+        if (input && input.setAttribute && !(input instanceof RadioNodeList)) {
+          input.setAttribute('aria-invalid', msg ? 'true' : 'false');
+        }
+      }
+
+      const CEDULA_RE = /^(PE|E|N|[1-9]|1[0-3])(AV|PI)?-\d{1,4}-\d{1,6}$/i;
+
+      function validate() {
+        const errors = [];
+        const nombre = form.nombre.value.trim();
+        if (nombre.length < 3) errors.push(['nombre', 'Escribe tu nombre completo.']);
+        else if (nombre.split(/\s+/).length < 2) errors.push(['nombre', 'Incluye al menos un nombre y un apellido.']);
+
+        const cedula = form.cedula.value.trim().toUpperCase().replace(/\s+/g, '');
+        if (!cedula) errors.push(['cedula', 'Escribe tu número de cédula.']);
+        else if (!CEDULA_RE.test(cedula)) errors.push(['cedula', 'Revisa el formato de la cédula, por ejemplo 8-123-4567 o PE-12-345.']);
+
+        const wa = form.whatsapp.value.replace(/[^\d+]/g, '');
+        if (wa && (wa.replace(/\D/g, '').length < 7 || wa.replace(/\D/g, '').length > 15)) {
+          errors.push(['whatsapp', 'Revisa el número de WhatsApp, por ejemplo 6123-4567.']);
+        }
+
+        if (!form.pago.value) errors.push(['pago', 'Elige cómo vas a pagar.']);
+
+        ['nombre', 'cedula', 'whatsapp', 'pago'].forEach(function (n) { setError(n, ''); });
+        errors.forEach(function (e) { setError(e[0], e[1]); });
+        return errors;
+      }
+
+      ['nombre', 'cedula', 'whatsapp'].forEach(function (n) {
+        form[n].addEventListener('blur', function () {
+          if (form.querySelector('[data-field="' + n + '"]').classList.contains('has-error')) validate();
+        });
+      });
+      form.querySelectorAll('input[name="pago"]').forEach(function (r) {
+        r.addEventListener('change', function () { setError('pago', ''); });
+      });
+      form.addEventListener('input', function () { if (!submitBtn.disabled) formStatus.textContent = ''; });
+      form.addEventListener('change', function () { if (!submitBtn.disabled) formStatus.textContent = ''; });
+
+      function focusFirstError(errors) {
+        const name = errors[0][0];
+        const el = name === 'pago' ? form.querySelector('input[name="pago"]') : form.elements[name];
+        if (el) {
+          el.focus({ preventScroll: true });
+          el.closest('.field').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }
+
+      /* ---------- Envío ---------- */
+      function readFileAsBase64(file) {
+        return new Promise(function (resolve, reject) {
+          const reader = new FileReader();
+          reader.onload = function () { resolve(String(reader.result).split(',')[1]); };
+          reader.onerror = function () { reject(new Error('No se pudo leer el archivo.')); };
+          reader.readAsDataURL(file);
+        });
+      }
+
+      form.addEventListener('submit', async function (ev) {
+        ev.preventDefault();
+        formStatus.textContent = '';
+        const errors = validate();
+        if (errors.length) {
+          formStatus.textContent = errors.length === 1 ? 'Falta corregir 1 campo.' : 'Faltan corregir ' + errors.length + ' campos.';
+          focusFirstError(errors);
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Enviando…';
+
+        try {
+          const payload = {
+            nombre: form.nombre.value.trim().replace(/\s+/g, ' '),
+            cedula: form.cedula.value.trim().toUpperCase().replace(/\s+/g, ''),
+            whatsapp: form.whatsapp.value.trim(),
+            transporte: form.transporte.value,
+            grupo: form.grupo.value.trim(),
+            sirviendo: form.sirviendo.value,
+            equipo: form.sirviendo.value === 'Ya tengo un equipo' ? form.equipo.value.trim() : '',
+            salud: form.salud.value.trim(),
+            alergias: form.alergias.value.trim(),
+            pago: form.pago.value,
+            website: form.website.value,
+            comprobante: null
+          };
+
+          const f = fileInput.files[0];
+          if (f) {
+            submitBtn.textContent = 'Subiendo comprobante…';
+            payload.comprobante = { name: f.name, type: f.type || 'application/octet-stream', data: await readFileAsBase64(f) };
+          }
+
+          let result;
+          if (demoMode) {
+            await new Promise(function (r) { setTimeout(r, 900); });
+            console.info('[FormCamps] Modo de prueba. Datos que se enviarían:', Object.assign({}, payload, { comprobante: payload.comprobante ? payload.comprobante.name : null }));
+            result = { ok: true };
+          } else {
+            const res = await fetch(CONFIG.scriptUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+              body: JSON.stringify(payload)
+            });
+            result = await res.json();
+          }
+
+          if (!result.ok) throw new Error(result.error || 'No se pudo guardar la inscripción.');
+          showSuccess(payload.nombre);
+        } catch (err) {
+          formStatus.textContent = (err && err.message && !/fetch|network|json/i.test(err.message))
+            ? err.message
+            : 'No se pudo enviar la inscripción. Revisa tu conexión a internet e inténtalo de nuevo.';
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Enviar inscripción';
+        }
+      });
+
+      function showSuccess(name) {
+        form.hidden = true;
+        document.getElementById('pago').hidden = true;
+        document.getElementById('successName').textContent = name.split(' ')[0];
+        success.hidden = false;
+        badge.classList.add('is-confirmed');
+        document.querySelector('.badge-area').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        success.focus({ preventScroll: true });
+      }
+
+      document.getElementById('againBtn').addEventListener('click', function () {
+        form.reset();
+        resetFile();
+        equipoField.hidden = true;
+        badge.classList.remove('is-confirmed');
+        updateBadge();
+        success.hidden = true;
+        form.hidden = false;
+        document.getElementById('pago').hidden = false;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        form.nombre.focus({ preventScroll: true });
+      });
+    })();
+  </script>
+</body>
+</html>
