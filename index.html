@@ -7,6 +7,8 @@
   <meta name="description" content="Confirma tu participación como servidor(a) en el Campamento de jóvenes Shalom.">
   <meta name="theme-color" content="#0A7D94">
   <meta property="og:image" content="assets/portada.jpg">
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
@@ -50,6 +52,15 @@
 
     /* Portada */
     .hero { padding: 20px 16px 40px; }
+    .brand {
+      max-width: 1080px;
+      margin: 0 auto 22px;
+    }
+    .brand img { width: 150px; height: auto; }
+    @media (min-width: 900px) {
+      .brand { margin-bottom: 40px; }
+      .brand img { width: 190px; }
+    }
     .hero-inner {
       max-width: 1080px;
       margin: 0 auto;
@@ -453,6 +464,8 @@
       color: rgba(254, 252, 240, .85);
       font-size: .9375rem;
     }
+    footer { display: flex; align-items: center; gap: 12px; }
+    footer img { width: 36px; height: 36px; flex: none; }
     footer p { margin: 0; }
 
     @media (prefers-reduced-motion: reduce) {
@@ -464,6 +477,9 @@
 </head>
 <body>
   <header class="hero">
+    <div class="brand">
+      <img src="assets/logo-shalom.png" width="720" height="196" alt="Comunidad Católica Shalom">
+    </div>
     <div class="hero-inner">
       <img class="poster" src="assets/portada.jpg" width="738" height="895"
            alt="Save the date: Camp's, Imposible a describir. Campamento de jóvenes Shalom.">
@@ -651,6 +667,7 @@
     </main>
 
     <footer>
+      <img src="assets/paloma.png" width="192" height="192" alt="">
       <p>Comunidad Católica Shalom · Panamá</p>
     </footer>
   </div>
