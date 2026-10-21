@@ -117,7 +117,7 @@ function doPost(e) {
     return json_({ ok: true });
   } catch (err) {
     console.error(err);
-    return json_({ ok: false, error: 'No se pudo guardar la inscripción. Inténtalo de nuevo en unos minutos.' });
+    return json_({ ok: false, error: 'No se pudo guardar la inscripción. Detalle: ' + (err && err.message ? err.message : err) });
   } finally {
     try { lock.releaseLock(); } catch (_) {}
   }
