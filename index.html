@@ -843,6 +843,11 @@
       }
 
       /* ---------- Envío ---------- */
+      function sendError(message, code) {
+        const e = new Error(message);
+        e.code = code;
+        return e;
+      }
       function readFileAsBase64(file) {
         return new Promise(function (resolve, reject) {
           const reader = new FileReader();
@@ -894,20 +899,31 @@
             console.info('[FormCamps] Modo de prueba. Datos que se enviarían:', Object.assign({}, payload, { comprobante: payload.comprobante ? payload.comprobante.name : null }));
             result = { ok: true };
           } else {
-            const res = await fetch(CONFIG.scriptUrl, {
-              method: 'POST',
-              headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-              body: JSON.stringify(payload)
-            });
-            result = await res.json();
+            let res, text;
+            try {
+              res = await fetch(CONFIG.scriptUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(payload)
+              });
+              text = await res.text();
+            } catch (e) {
+              console.error('[FormCamps] Error de conexión', e);
+              throw sendError('No se pudo conectar con el servidor de inscripciones. Revisa tu internet e inténtalo de nuevo.', 'E1');
+            }
+            try {
+              result = JSON.parse(text);
+            } catch (e) {
+              console.error('[FormCamps] Respuesta inesperada', res.status, text.slice(0, 500));
+              throw sendError('El servidor de inscripciones respondió con un error.', 'E2-' + res.status);
+            }
           }
 
-          if (!result.ok) throw new Error(result.error || 'No se pudo guardar la inscripción.');
+          if (!result.ok) throw sendError(result.error || 'No se pudo guardar la inscripción.', 'E3');
           showSuccess(payload.nombre);
         } catch (err) {
-          formStatus.textContent = (err && err.message && !/fetch|network|json/i.test(err.message))
-            ? err.message
-            : 'No se pudo enviar la inscripción. Revisa tu conexión a internet e inténtalo de nuevo.';
+          const code = err && err.code ? ' (código ' + err.code + ')' : '';
+          formStatus.textContent = (err && err.code ? err.message : 'No se pudo enviar la inscripción. Inténtalo de nuevo.') + code;
         } finally {
           submitBtn.disabled = false;
           submitBtn.textContent = 'Enviar inscripción';
