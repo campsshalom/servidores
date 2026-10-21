@@ -35,7 +35,8 @@ const HEADERS = [
   'Alergias / intolerancias',
   'Forma de pago',
   'Comprobante de pago',
-  '¿Cédula repetida?'
+  '¿Cédula repetida?',
+  'Correo electrónico'
 ];
 
 const ALLOWED_MIME = [
@@ -46,6 +47,7 @@ const ALLOWED_MIME = [
 ];
 
 const PAGO_OPCIONES = ['Efectivo', 'Transferencia', 'Yappy'];
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 /* ------------------------------------------------------------------ */
 /* Configuración inicial: ejecútala UNA vez desde el editor            */
@@ -88,6 +90,7 @@ function doPost(e) {
 
     lock.waitLock(20000);
     const sheet = getSheet_();
+    ensureHeaders_(sheet);
     const cedula = clean_(data.cedula, 20).toUpperCase();
     const repetida = isDuplicate_(sheet, cedula) ? 'Sí' : '';
 
@@ -104,7 +107,8 @@ function doPost(e) {
       safe_(clean_(data.alergias, 1000)),
       safe_(clean_(data.pago, 20)),
       fileUrl,
-      repetida
+      repetida,
+      safe_(clean_(data.correo, 120).toLowerCase())
     ]);
     SpreadsheetApp.flush();
     lock.releaseLock();
@@ -130,6 +134,8 @@ function validate_(d) {
   if (!/^(PE|E|N|[1-9]|1[0-3])(AV|PI)?-\d{1,4}-\d{1,6}$/.test(cedula)) {
     return 'La cédula no tiene un formato válido.';
   }
+
+  if (!EMAIL_RE.test(clean_(d.correo, 120))) return 'Falta un correo electrónico válido.';
 
   if (PAGO_OPCIONES.indexOf(d.pago) === -1) return 'Falta la forma de pago.';
 
@@ -200,6 +206,18 @@ function prepareSheet_(sheet) {
   sheet.setColumnWidth(2, 220);
 }
 
+// Si la hoja se creó con una versión anterior, agrega los encabezados que falten (por ejemplo, Correo electrónico).
+function ensureHeaders_(sheet) {
+  const width = sheet.getLastColumn();
+  if (width >= HEADERS.length) return;
+  sheet.getRange(1, 1, 1, HEADERS.length)
+    .setValues([HEADERS])
+    .setFontWeight('bold')
+    .setBackground('#1F6B4A')
+    .setFontColor('#FFFFFF')
+    .setWrap(true);
+}
+
 function getFolder_() {
   const props = PropertiesService.getScriptProperties();
   const id = props.getProperty('FOLDER_ID');
@@ -230,6 +248,7 @@ function notify_(d, fileUrl, repetida) {
       'Nombre: ' + clean_(d.nombre, 120),
       'Cédula: ' + clean_(d.cedula, 20),
       'WhatsApp: ' + (clean_(d.whatsapp, 20) || '—'),
+      'Correo: ' + clean_(d.correo, 120),
       'Forma de pago: ' + clean_(d.pago, 20),
       'Comprobante: ' + (fileUrl || 'No adjuntó'),
       repetida ? '\nAtención: esta cédula ya estaba registrada.' : '',

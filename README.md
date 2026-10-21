@@ -58,6 +58,7 @@ Hazlo con la cuenta de Google donde quieres que queden las inscripciones.
 | Nombre completo | Obligatorio |
 | Cédula | Obligatorio, formato panameño (8-123-4567, PE-12-345, E-8-12345…) |
 | WhatsApp | Opcional |
+| Correo electrónico | Obligatorio (va en la última columna de la hoja) |
 | ¿Cómo vas a llegar a la finca? | En mi auto / Requiero de bus |
 | Grupo de oración / pastoral / movimiento | Texto |
 | ¿Estás sirviendo? | Ya tengo un equipo / Aún no tengo equipo |
