@@ -1,4 +1,4 @@
-# FormCamps
+# Camp's · Inscripción de servidores
 
 Landing de inscripción de servidores para el **Campamento de jóvenes Shalom**.
 Cada inscripción se guarda en una Google Sheet de tu Drive y el comprobante de pago se guarda en una carpeta de Drive.
@@ -40,7 +40,7 @@ Hazlo con la cuenta de Google donde quieres que queden las inscripciones.
 
 1. En GitHub, entra al repo → **Settings → Pages**.
 2. En *Source* elige **Deploy from a branch**, rama **main**, carpeta **/ (root)** y guarda.
-3. En 1–2 minutos queda en: `https://yinoxavier.github.io/FormCamps/`
+3. En 1–2 minutos queda en: `https://campsshalom.github.io/servidores/`
 
 ## 3. Probar
 
