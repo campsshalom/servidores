@@ -260,6 +260,16 @@
       color: var(--naranja);
     }
     .price-note { margin: 10px 0 20px; max-width: 34em; }
+    .price-tag {
+      display: inline-block;
+      margin: 10px 0 0;
+      padding: 4px 12px;
+      border-radius: 10px;
+      background: var(--sol);
+      color: var(--ink);
+      font-weight: 700;
+      font-size: .9375rem;
+    }
     .pay-list { list-style: none; margin: 0; padding: 0; border-top: 1.5px solid var(--line); }
     .pay-list li {
       display: flex;
@@ -500,6 +510,7 @@
       <section id="pago" aria-labelledby="pago-titulo">
         <h2 id="pago-titulo">Paquete para servidores</h2>
         <span class="price">B/. 59.00</span>
+        <span class="price-tag">Precio válido hasta el 31 de diciembre</span>
         <p class="price-note">Separa tu cupo con el 50% (B/. 29.50) y paga el resto en cuotas hasta la última semana de febrero.</p>
         <ul class="pay-list">
           <li>
