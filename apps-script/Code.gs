@@ -59,6 +59,7 @@ function setup() {
   const props = PropertiesService.getScriptProperties();
   Logger.log('SPREADSHEET_ID antes: ' + (props.getProperty('SPREADSHEET_ID') || '(vacío)'));
   props.deleteProperty('SPREADSHEET_IN_FOLDER'); // fuerza la revisión de la carpeta
+  props.deleteProperty('FOLDER_IN_PLACE');
   const target = getTargetFolder_();
   Logger.log('Carpeta destino: ' + target.getName() + ' → ' + target.getUrl());
   const ss = getSpreadsheet_();
@@ -69,7 +70,8 @@ function setup() {
   Logger.log('La hoja está en: ' + (where.join(', ') || '(sin carpeta)'));
   Logger.log('Dueño de la hoja: ' + DriveApp.getFileById(ss.getId()).getOwner().getEmail() + ' · Script ejecutado por: ' + Session.getEffectiveUser().getEmail());
   const folder = getFolder_();
-  Logger.log('Carpeta de comprobantes: ' + folder.getUrl());
+  const fp = folder.getParents();
+  Logger.log('Carpeta de comprobantes: ' + folder.getName() + ' → ' + folder.getUrl() + ' (está en: ' + (fp.hasNext() ? fp.next().getName() : '?') + ')');
 }
 
 /* ------------------------------------------------------------------ */
@@ -281,12 +283,35 @@ function ensureHeaders_(sheet) {
 
 function getFolder_() {
   const props = PropertiesService.getScriptProperties();
+  let folder = null;
+
+  // 1) La carpeta que ya usa el script (se conserva con sus comprobantes)
   const id = props.getProperty('FOLDER_ID');
   if (id) {
-    try { return DriveApp.getFolderById(id); } catch (_) { /* fue borrada: se crea otra */ }
+    try { folder = DriveApp.getFolderById(id); if (folder.isTrashed()) folder = null; } catch (_) { folder = null; }
   }
-  const folder = DriveApp.createFolder(SETTINGS.FOLDER_NAME);
-  props.setProperty('FOLDER_ID', folder.getId());
+  // Ya está en su lugar: no hace falta revisar Drive en cada inscripción
+  if (folder && props.getProperty('FOLDER_IN_PLACE') === id) return folder;
+
+  const target = getTargetFolder_();
+  // 2) Una carpeta con el mismo nombre que ya esté en la ruta
+  if (!folder) {
+    const found = target.getFoldersByName(SETTINGS.FOLDER_NAME);
+    if (found.hasNext()) folder = found.next();
+  }
+  // 3) Si no hay ninguna, se crea dentro de la ruta
+  if (!folder) folder = target.createFolder(SETTINGS.FOLDER_NAME);
+  if (folder.getId() !== id) props.setProperty('FOLDER_ID', folder.getId());
+
+  try {
+    const parents = folder.getParents();
+    let inPlace = false;
+    while (parents.hasNext()) if (parents.next().getId() === target.getId()) inPlace = true;
+    if (!inPlace) folder.moveTo(target);
+    props.setProperty('FOLDER_IN_PLACE', folder.getId());
+  } catch (err) {
+    Logger.log('No se pudo mover la carpeta de comprobantes: ' + err);
+  }
   return folder;
 }
 
