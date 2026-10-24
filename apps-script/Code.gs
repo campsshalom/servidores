@@ -56,11 +56,20 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 /* Configuración inicial: ejecútala UNA vez desde el editor            */
 /* ------------------------------------------------------------------ */
 function setup() {
+  const props = PropertiesService.getScriptProperties();
+  Logger.log('SPREADSHEET_ID antes: ' + (props.getProperty('SPREADSHEET_ID') || '(vacío)'));
+  props.deleteProperty('SPREADSHEET_IN_FOLDER'); // fuerza la revisión de la carpeta
+  const target = getTargetFolder_();
+  Logger.log('Carpeta destino: ' + target.getName() + ' → ' + target.getUrl());
   const ss = getSpreadsheet_();
+  const parents = DriveApp.getFileById(ss.getId()).getParents();
+  const where = [];
+  while (parents.hasNext()) where.push(parents.next().getName());
+  Logger.log('Hoja de inscripciones: ' + ss.getName() + ' → ' + ss.getUrl());
+  Logger.log('La hoja está en: ' + (where.join(', ') || '(sin carpeta)'));
+  Logger.log('Dueño de la hoja: ' + DriveApp.getFileById(ss.getId()).getOwner().getEmail() + ' · Script ejecutado por: ' + Session.getEffectiveUser().getEmail());
   const folder = getFolder_();
-  Logger.log('Hoja de inscripciones: ' + ss.getUrl());
   Logger.log('Carpeta de comprobantes: ' + folder.getUrl());
-  Logger.log('Listo. Ahora implementa el proyecto como Aplicación web.');
 }
 
 /* ------------------------------------------------------------------ */
