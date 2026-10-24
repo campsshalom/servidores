@@ -89,7 +89,10 @@ function doPost(e) {
     const data = JSON.parse(e.postData.contents);
 
     // Campo trampa para bots: si viene lleno, respondemos "ok" sin guardar.
-    if (data.website) return json_({ ok: true });
+    if (data.website) {
+      console.warn('Envío descartado: el campo trampa "website" vino lleno (' + String(data.website).slice(0, 60) + ').');
+      return json_({ ok: true });
+    }
 
     const error = validate_(data);
     if (error) return json_({ ok: false, error: error });
@@ -123,6 +126,7 @@ function doPost(e) {
       safe_(clean_(data.correo, 120).toLowerCase())
     ]);
     SpreadsheetApp.flush();
+    console.log('Inscripción guardada: fila ' + sheet.getLastRow() + ' de la pestaña "' + sheet.getName() + '" en ' + sheet.getParent().getUrl());
     lock.releaseLock();
 
     notify_(data, fileUrl, repetida);
