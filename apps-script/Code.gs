@@ -3,7 +3,8 @@
  *
  * Qué hace:
  *  - Recibe cada inscripción enviada desde la landing (index.html).
- *  - Guarda una fila en la Google Sheet "Inscripciones Servidores Shalom".
+ *  - Guarda una fila en la Google Sheet "Inscripciones Servidores Shalom",
+ *    dentro de Mi unidad › CAMPS 2027 › Inscripciones (las carpetas se crean solas).
  *  - Guarda el comprobante de pago (si lo suben) en una carpeta de Google Drive
  *    y pone el enlace en la fila.
  *
@@ -15,6 +16,8 @@
 
 const SETTINGS = {
   SPREADSHEET_NAME: 'Inscripciones Servidores Shalom',
+  // Carpeta de Drive donde vive la hoja (se crea si no existe): Mi unidad › CAMPS 2027 › Inscripciones
+  DRIVE_PATH: ['CAMPS 2027', 'Inscripciones'],
   SHEET_NAME: 'Inscripciones',
   FOLDER_NAME: 'Comprobantes de pago - Servidores Shalom',
   MAX_FILE_MB: 10,
@@ -169,14 +172,59 @@ function saveFile_(d) {
 
 function getSpreadsheet_() {
   const props = PropertiesService.getScriptProperties();
+  let ss = null;
+
+  // 1) La hoja que ya usa el script (se conserva con sus inscripciones)
   const id = props.getProperty('SPREADSHEET_ID');
   if (id) {
-    try { return SpreadsheetApp.openById(id); } catch (_) { /* fue borrada: se crea otra */ }
+    try { ss = SpreadsheetApp.openById(id); } catch (_) { /* fue borrada: se busca o se crea otra */ }
   }
-  const ss = SpreadsheetApp.create(SETTINGS.SPREADSHEET_NAME);
-  props.setProperty('SPREADSHEET_ID', ss.getId());
-  prepareSheet_(ss.getSheets()[0]);
+  // Ya está en su carpeta: no hace falta revisar Drive en cada inscripción
+  if (ss && props.getProperty('SPREADSHEET_IN_FOLDER') === id) return ss;
+
+  const folder = getTargetFolder_();
+  // 2) Una hoja con el mismo nombre que ya esté en la carpeta
+  if (!ss) {
+    const files = folder.getFilesByName(SETTINGS.SPREADSHEET_NAME);
+    while (files.hasNext()) {
+      const f = files.next();
+      if (f.getMimeType() === MimeType.GOOGLE_SHEETS && !f.isTrashed()) { ss = SpreadsheetApp.open(f); break; }
+    }
+  }
+  // 3) Si no hay ninguna, se crea
+  if (!ss) {
+    ss = SpreadsheetApp.create(SETTINGS.SPREADSHEET_NAME);
+    prepareSheet_(ss.getSheets()[0]);
+  }
+  if (ss.getId() !== id) props.setProperty('SPREADSHEET_ID', ss.getId());
+  try {
+    moveToFolder_(ss.getId(), folder);
+    props.setProperty('SPREADSHEET_IN_FOLDER', ss.getId());
+  } catch (err) {
+    // Sin permiso para moverla (p. ej. es de otra cuenta): se sigue usando donde está
+    Logger.log('No se pudo mover la hoja a la carpeta: ' + err);
+  }
   return ss;
+}
+
+// Devuelve (y crea si hace falta) la carpeta Mi unidad › CAMPS 2027 › Inscripciones.
+function getTargetFolder_() {
+  let folder = DriveApp.getRootFolder();
+  SETTINGS.DRIVE_PATH.forEach(function (name) {
+    const found = folder.getFoldersByName(name);
+    folder = found.hasNext() ? found.next() : folder.createFolder(name);
+  });
+  return folder;
+}
+
+// Mueve el archivo a la carpeta si todavía no está ahí.
+function moveToFolder_(fileId, folder) {
+  const file = DriveApp.getFileById(fileId);
+  const parents = file.getParents();
+  while (parents.hasNext()) {
+    if (parents.next().getId() === folder.getId()) return;
+  }
+  file.moveTo(folder);
 }
 
 function getSheet_() {
