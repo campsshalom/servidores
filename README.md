@@ -75,3 +75,15 @@ La hoja y los comprobantes son **privados**: solo los ve el dueño de la cuenta 
 
 Todo el texto está en `index.html`: nombre del campamento y año, precio, datos de pago y preguntas.
 Si cambias el precio o los datos de pago, revisa la sección **Paquete para servidores**.
+
+## Avisos por Telegram
+
+Cada inscripción manda un mensaje a un grupo de Telegram con lo básico: nombre, forma de pago, si subió comprobante y el total de inscritos. Los datos de salud y los contactos se quedan solo en la hoja.
+
+1. En Telegram, abre **@BotFather** → `/newbot` → ponle un nombre (por ejemplo "Avisos Camps") y un usuario que termine en `bot`. Copia el **token** que te da.
+2. Crea un grupo (por ejemplo "Equipo Camp's 2027"), agrega el bot y escribe `/start` en el grupo.
+3. En Apps Script, pega el token en `TELEGRAM_TOKEN: ''` dentro de `SETTINGS`. **No subas el token a GitHub.**
+4. Elige la función **`configurarTelegram`** → **Ejecutar** → acepta el permiso nuevo ("conectarse a un servicio externo"). Debe llegar un mensaje de prueba al grupo.
+5. **Implementar → Gestionar implementaciones → lápiz → Versión: Nueva versión → Implementar.** La URL no cambia.
+
+Si Telegram falla, la inscripción se guarda igual; el error queda en **Ejecuciones** de Apps Script.

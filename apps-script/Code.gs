@@ -22,8 +22,16 @@ const SETTINGS = {
   FOLDER_NAME: 'Comprobantes de pago - Servidores Shalom',
   MAX_FILE_MB: 10,
   // Si quieres recibir un correo con cada inscripción, escribe aquí tu correo. Déjalo vacío para no recibir.
-  NOTIFY_EMAIL: ''
+  NOTIFY_EMAIL: '',
+  // Avisos por Telegram: pega aquí el token que te da @BotFather y ejecuta configurarTelegram().
+  // No subas el token a GitHub: pégalo solo en Apps Script.
+  TELEGRAM_TOKEN: '',
+  // Lo llena configurarTelegram() solo. Escríbelo aquí únicamente si quieres forzar otro chat.
+  TELEGRAM_CHAT_ID: ''
 };
+
+// Nombre con el que aparece este formulario en los avisos.
+const TG_LABEL = 'Servidores';
 
 const HEADERS = [
   'Fecha de registro',
@@ -132,6 +140,7 @@ function doPost(e) {
     lock.releaseLock();
 
     notify_(data, fileUrl, repetida);
+    telegram_(data, fileUrl, repetida, sheet);
     return json_({ ok: true });
   } catch (err) {
     console.error(err);
@@ -345,6 +354,89 @@ function notify_(d, fileUrl, repetida) {
   } catch (err) {
     console.error('No se pudo enviar el aviso por correo', err);
   }
+}
+
+/* ------------------------------------------------------------------ */
+/* Avisos por Telegram                                                  */
+/* ------------------------------------------------------------------ */
+// Ejecútala UNA vez desde el editor, después de pegar el token del bot en
+// SETTINGS.TELEGRAM_TOKEN y de agregar el bot al grupo de Telegram.
+// Busca el grupo, lo guarda y manda un mensaje de prueba.
+function configurarTelegram() {
+  if (!SETTINGS.TELEGRAM_TOKEN) {
+    throw new Error('Primero pega el token del bot en SETTINGS.TELEGRAM_TOKEN (te lo da @BotFather).');
+  }
+  const res = UrlFetchApp.fetch('https://api.telegram.org/bot' + SETTINGS.TELEGRAM_TOKEN + '/getUpdates', { muteHttpExceptions: true });
+  const body = JSON.parse(res.getContentText());
+  if (!body.ok) throw new Error('Telegram no aceptó el token: ' + body.description);
+
+  let group = null, priv = null;
+  body.result.forEach(function (u) {
+    const m = u.message || u.edited_message || u.channel_post || u.my_chat_member;
+    if (!m || !m.chat) return;
+    if (m.chat.type === 'private') priv = m.chat; else group = m.chat;
+  });
+  const chat = group || priv;
+  if (!chat) {
+    throw new Error('No encontré el grupo. Agrega el bot al grupo, escribe /start en el grupo y vuelve a ejecutar configurarTelegram.');
+  }
+  PropertiesService.getScriptProperties().setProperty('TELEGRAM_CHAT_ID', String(chat.id));
+  Logger.log('Avisos configurados en: ' + (chat.title || chat.first_name || 'chat') + ' (id ' + chat.id + ')');
+  const ok = sendTelegram_('✅ Avisos de <b>' + esc_(TG_LABEL) + '</b> activados en este chat.');
+  Logger.log(ok ? 'Mensaje de prueba enviado. Revisa Telegram.' : 'No se pudo enviar el mensaje de prueba; revisa el registro.');
+}
+
+// Envía un mensaje al chat configurado. Nunca detiene la inscripción si falla.
+function sendTelegram_(html) {
+  try {
+    if (!SETTINGS.TELEGRAM_TOKEN) return false;
+    const props = PropertiesService.getScriptProperties();
+    const chatId = SETTINGS.TELEGRAM_CHAT_ID || props.getProperty('TELEGRAM_CHAT_ID');
+    if (!chatId) return false;
+    const send = function (id) {
+      const res = UrlFetchApp.fetch('https://api.telegram.org/bot' + SETTINGS.TELEGRAM_TOKEN + '/sendMessage', {
+        method: 'post',
+        contentType: 'application/json',
+        payload: JSON.stringify({ chat_id: id, text: html, parse_mode: 'HTML', disable_web_page_preview: true }),
+        muteHttpExceptions: true
+      });
+      return JSON.parse(res.getContentText());
+    };
+    let r = send(chatId);
+    // Si el grupo pasó a "supergrupo", Telegram le cambia el id: se actualiza y se reintenta.
+    if (!r.ok && r.parameters && r.parameters.migrate_to_chat_id) {
+      props.setProperty('TELEGRAM_CHAT_ID', String(r.parameters.migrate_to_chat_id));
+      r = send(r.parameters.migrate_to_chat_id);
+    }
+    if (!r.ok) console.error('Telegram no envió el aviso: ' + r.description);
+    return !!r.ok;
+  } catch (err) {
+    console.error('No se pudo enviar el aviso por Telegram', err);
+    return false;
+  }
+}
+
+function esc_(value) {
+  return String(value == null ? '' : value).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+// Aviso de cada inscripción (solo datos básicos; la salud y los contactos se quedan en la hoja).
+function telegram_(d, fileUrl, repetida, sheet) {
+  const total = Math.max(0, sheet.getLastRow() - 1);
+  const equipo = clean_(d.sirviendo, 40) === 'Ya tengo un equipo'
+    ? 'Equipo: ' + (clean_(d.equipo, 200) || 'sin especificar')
+    : (clean_(d.sirviendo, 40) || 'No indicó si está sirviendo');
+  const lines = [
+    '🙌 <b>Nuevo servidor(a) inscrito</b>',
+    '👤 ' + esc_(clean_(d.nombre, 120)),
+    '🧩 ' + esc_(equipo),
+    clean_(d.transporte, 40) ? '🚌 ' + esc_(clean_(d.transporte, 40)) : '',
+    '💳 ' + esc_(clean_(d.pago, 20)) + ' · ' + (fileUrl ? 'con comprobante ✅' : 'sin comprobante'),
+    repetida ? '⚠️ Esta cédula ya estaba inscrita' : '',
+    '📋 Total de servidores: <b>' + total + '</b>',
+    '<a href="' + sheet.getParent().getUrl() + '">Abrir la hoja</a>'
+  ];
+  sendTelegram_(lines.filter(String).join('\n'));
 }
 
 /* ------------------------------------------------------------------ */
